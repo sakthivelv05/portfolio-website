@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sakthivel V — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   CSS CUSTOM PROPERTIES
+═══════════════════════════════════════════ */
+:root {
+  --bg: #f0f4ff;
+  --bg2: #e6edff;
+  --surface: #ffffff;
+  --surface2: rgba(255,255,255,0.65);
+  --border: rgba(99,140,255,0.18);
+  --text: #0d1b3e;
+  --text2: #4a5980;
+  --accent: #2d6ef6;
+  --accent2: #5b8cff;
+  --accent3: #00d4b1;
+  --glow: rgba(45,110,246,0.28);
+  --glow3: rgba(0,212,177,0.2);
+  --shadow: 0 8px 32px rgba(45,110,246,0.12);
+  --shadow-lg: 0 24px 60px rgba(45,110,246,0.2);
+  --shadow-3d: 0 30px 80px rgba(45,110,246,0.25), 0 8px 24px rgba(0,0,0,0.08);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --nav-h: 70px;
+  --transition: 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+}
+[data-theme="dark"] {
+  --bg: #060c1a;
+  --bg2: #0a1228;
+  --surface: #0f1825;
+  --surface2: rgba(15,24,37,0.75);
+  --border: rgba(91,140,255,0.15);
+  --text: #e8efff;
+  --text2: #7a8fb8;
+  --accent: #5b8cff;
+  --accent2: #7aa8ff;
+  --accent3: #00f5cc;
+  --glow: rgba(91,140,255,0.35);
+  --glow3: rgba(0,245,204,0.25);
+  --shadow: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-lg: 0 24px 60px rgba(0,0,0,0.55);
+  --shadow-3d: 0 30px 80px rgba(0,0,0,0.6), 0 0 40px rgba(91,140,255,0.12);
+}
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  transition: background var(--transition), color var(--transition);
+}
+a { text-decoration:none; color:inherit; }
+img { max-width:100%; }
+section { padding: 110px 0; }
+
+/* ═══════════════════════════════════════════
+   CINEMATIC INTRO OVERLAY
+   Covers the whole screen, plays sequence,
+   then slides up to reveal portfolio
+═══════════════════════════════════════════ */
+#intro-overlay {
+  position:fixed; inset:0; z-index:9999;
+  background: #060c1a;
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column;
+}
+/* Stage exits upward when done */
+#intro-overlay.exit {
+  animation: intro-exit 0.9s cubic-bezier(0.76,0,0.24,1) forwards;
+}
+@keyframes intro-exit {
+  0%   { transform:translateY(0);   opacity:1; }
+  60%  { transform:translateY(-8%); opacity:1; }
+  100% { transform:translateY(-100%); opacity:1; }
+}
+
+/* ── GRID FLOOR (perspective 3D ground) ── */
+.intro-floor {
+  position:absolute;
+  bottom:0; left:-50%; right:-50%;
+  height:55%;
+  background:
+    linear-gradient(90deg, rgba(91,140,255,0.12) 1px, transparent 1px),
+    linear-gradient(0deg,  rgba(91,140,255,0.12) 1px, transparent 1px);
+  background-size:60px 60px;
+  transform: perspective(400px) rotateX(55deg);
+  transform-origin: bottom center;
+  opacity:0;
+  animation: floor-in 0.6s 0.3s ease forwards;
+}
+@keyframes floor-in { to { opacity:1; } }
+
+/* Horizon glow on the floor */
+.intro-floor::after {
+  content:'';
+  position:absolute; bottom:100%; left:0; right:0;
+  height:80px;
+  background:linear-gradient(to top, rgba(91,140,255,0.18), transparent);
+}
+
+/* ── SCANLINES overlay for cinematic feel ── */
+.intro-scanlines {
+  position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.18) 3px,
+    rgba(0,0,0,0.18) 4px
+  );
+  opacity:0.4;
+}
+
+/* ── NAME TAG (top center, fades in) ── */
+.intro-name {
+  position:absolute;
+  top:12%;
+  left:50%; transform:translateX(-50%);
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1rem,3vw,1.4rem);
+  font-weight:700;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.0);
+  white-space:nowrap;
+  animation: name-glow 1s 0.5s ease forwards;
+}
+.intro-name span {
+  background:linear-gradient(90deg,#5b8cff,#00f5cc,#5b8cff);
+  background-size:200%;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation: shimmer-text 2s 1s linear infinite;
+}
+@keyframes name-glow {
+  from { opacity:0; letter-spacing:0.4em; }
+  to   { opacity:1; letter-spacing:0.22em; color:rgba(255,255,255,1); }
+}
+@keyframes shimmer-text {
+  0%  { background-position:200% center; }
+  100%{ background-position:-200% center; }
+}
+
+/* ── TAGLINE below name ── */
+.intro-tagline {
+  position:absolute;
+  top:calc(12% + 3rem);
+  left:50%; transform:translateX(-50%);
+  font-family:'DM Sans',sans-serif;
+  font-size:clamp(0.65rem,1.5vw,0.8rem);
+  font-weight:400;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:rgba(91,140,255,0.7);
+  white-space:nowrap;
+  opacity:0;
+  animation: fade-up 0.6s 1.2s ease forwards;
+}
+@keyframes fade-up {
+  from { opacity:0; transform:translateX(-50%) translateY(10px); }
+  to   { opacity:1; transform:translateX(-50%) translateY(0); }
+}
+
+/* ── SHADOW on floor (cast by character) ── */
+.char-shadow {
+  position:absolute;
+  bottom:44%;
+  left:-160px; /* starts off-screen left */
+  width:60px; height:14px;
+  background:radial-gradient(ellipse, rgba(91,140,255,0.5) 0%, transparent 70%);
+  border-radius:50%;
+  filter:blur(4px);
+  animation: shadow-run 1.8s 0.8s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+@keyframes shadow-run {
+  0%   { left:-160px; opacity:0.3; width:50px; }
+  30%  { opacity:0.7; }
+  70%  { left:calc(50% - 30px); opacity:0.8; width:60px; }
+  85%  { left:calc(50% - 30px); opacity:0.6; width:70px; transform:scaleX(1.1); }
+  100% { left:calc(50% - 30px); opacity:0; width:80px; transform:scaleX(1.4); }
+}
+
+/* ── CHARACTER WRAPPER ── */
+.char-wrap {
+  position:absolute;
+  bottom:44%;
+  left:-180px;
+  width:72px; height:110px;
+  animation: char-run 1.8s 0.8s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+@keyframes char-run {
+  0%   { left:-180px; }
+  70%  { left:calc(50% - 36px); }
+  80%  { left:calc(50% - 36px); transform:scaleX(1) skewX(0deg); }
+  85%  { left:calc(50% - 36px); transform:scaleX(0.8) skewX(6deg); } /* impact squish */
+  100% { left:calc(50% - 36px); transform:scale(1) skewX(0deg); }
+}
+
+/* ── THE 3D CSS CHARACTER ──
+   Built entirely from divs + CSS transforms
+   Perspective on the wrap gives depth
+── */
+.char-3d {
+  width:100%; height:100%;
+  position:relative;
+  transform-style: preserve-3d;
+  perspective: 300px;
+}
+
+/* Body */
+.c-body {
+  position:absolute;
+  left:50%; transform:translateX(-50%);
+  top:28%; width:24px; height:32px;
+  background:linear-gradient(160deg,#5b8cff,#2d6ef6);
+  border-radius:6px 6px 4px 4px;
+  box-shadow: 2px 4px 12px rgba(91,140,255,0.5), inset -3px 0 0 rgba(0,0,0,0.2);
+}
+/* Body shine */
+.c-body::before {
+  content:'';
+  position:absolute; top:3px;left:3px;
+  width:6px;height:12px;
+  background:rgba(255,255,255,0.18);
+  border-radius:3px;
+}
+
+/* Head */
+.c-head {
+  position:absolute;
+  left:50%; transform:translateX(-50%);
+  top:8%; width:22px; height:22px;
+  background:linear-gradient(135deg,#f4c27a,#e8a84a);
+  border-radius:50% 50% 45% 45%;
+  box-shadow: 2px 3px 10px rgba(0,0,0,0.3), inset -2px 0 0 rgba(0,0,0,0.1);
+}
+/* Helmet visor */
+.c-head::before {
+  content:'';
+  position:absolute; top:6px;left:3px;right:3px;height:7px;
+  background:linear-gradient(135deg,#00f5cc,#5b8cff);
+  border-radius:4px;
+  opacity:0.85;
+  box-shadow: 0 0 8px rgba(0,245,204,0.7);
+}
+
+/* Legs — animated in running cycle */
+.c-leg {
+  position:absolute;
+  bottom:0; width:10px; height:30px;
+  background:linear-gradient(180deg,#2d4a8a,#1a2f5e);
+  border-radius:3px 3px 5px 5px;
+  transform-origin: top center;
+  box-shadow: inset -2px 0 0 rgba(0,0,0,0.25);
+}
+.c-leg-l { left:calc(50% - 13px); animation: leg-l 0.28s 0.8s linear infinite alternate; }
+.c-leg-r { left:calc(50% + 3px);  animation: leg-r 0.28s 0.8s linear infinite alternate; }
+@keyframes leg-l {
+  from { transform:rotate(-40deg) scaleY(0.9); }
+  to   { transform:rotate(30deg) scaleY(1.05); }
+}
+@keyframes leg-r {
+  from { transform:rotate(30deg) scaleY(1.05); }
+  to   { transform:rotate(-40deg) scaleY(0.9); }
+}
+
+/* Feet */
+.c-foot {
+  position:absolute;
+  bottom:-4px; width:14px; height:7px;
+  background:#1a2f5e;
+  border-radius:3px 5px 5px 3px;
+}
+.c-leg-l .c-foot { right:-3px; }
+.c-leg-r .c-foot { left:-2px; border-radius:5px 3px 3px 5px; }
+
+/* Arms — swing opposite to legs */
+.c-arm {
+  position:absolute;
+  top:32%; width:9px; height:22px;
+  background:linear-gradient(180deg,#5b8cff,#3d6be0);
+  border-radius:3px 3px 5px 5px;
+  transform-origin: top center;
+  box-shadow: inset -2px 0 0 rgba(0,0,0,0.2);
+}
+.c-arm-l { left:calc(50% - 18px); animation: arm-r 0.28s 0.8s linear infinite alternate; } /* opposite swing */
+.c-arm-r { left:calc(50% + 9px);  animation: arm-l 0.28s 0.8s linear infinite alternate; }
+@keyframes arm-l {
+  from { transform:rotate(-35deg); }
+  to   { transform:rotate(25deg); }
+}
+@keyframes arm-r {
+  from { transform:rotate(25deg); }
+  to   { transform:rotate(-35deg); }
+}
+
+/* Running body bob */
+.char-3d { animation: body-bob 0.28s 0.8s ease-in-out infinite alternate; }
+@keyframes body-bob {
+  from { transform:translateY(0px); }
+  to   { transform:translateY(-4px); }
+}
+
+/* Speed lines (motion blur streaks) */
+.speed-lines {
+  position:absolute;
+  bottom:44%; right:55%;
+  display:flex; flex-direction:column; gap:5px;
+  opacity:0;
+  animation: lines-show 1.8s 0.9s ease forwards;
+}
+@keyframes lines-show {
+  0%,70% { opacity:0; }
+  80%    { opacity:1; }
+  100%   { opacity:0; }
+}
+.speed-line {
+  height:2px; border-radius:2px;
+  background:linear-gradient(90deg,transparent,rgba(91,140,255,0.7),transparent);
+  animation: line-streak 0.18s linear infinite;
+}
+.speed-line:nth-child(1){ width:80px; animation-delay:0s; }
+.speed-line:nth-child(2){ width:50px; animation-delay:0.05s; }
+.speed-line:nth-child(3){ width:65px; animation-delay:0.02s; }
+.speed-line:nth-child(4){ width:40px; animation-delay:0.07s; }
+@keyframes line-streak {
+  from { transform:translateX(30px); opacity:1; }
+  to   { transform:translateX(-30px); opacity:0.3; }
+}
+
+/* ── IMPACT BURST (when character stops) ── */
+.impact-burst {
+  position:absolute;
+  bottom:46%; left:50%; transform:translate(-50%,-50%);
+  width:0; height:0;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(91,140,255,0.6) 0%, rgba(0,245,204,0.3) 40%, transparent 70%);
+  opacity:0;
+  animation: burst 0.5s 2.55s cubic-bezier(0.23,1,0.32,1) forwards;
+}
+@keyframes burst {
+  0%  { width:0;   height:0;   opacity:1; margin-left:0;   margin-bottom:0; }
+  100%{ width:160px;height:160px;opacity:0; margin-left:-80px;margin-bottom:-80px; }
+}
+
+/* ── RING SHOCKWAVE ── */
+.impact-ring {
+  position:absolute;
+  bottom:46%; left:50%; transform:translate(-50%,50%);
+  width:0; height:0;
+  border:3px solid rgba(91,140,255,0.8);
+  border-radius:50%;
+  opacity:0;
+  animation: ring-expand 0.7s 2.55s cubic-bezier(0.23,1,0.32,1) forwards;
+}
+@keyframes ring-expand {
+  0%  { width:10px;  height:10px;  opacity:1; margin-left:-5px;  }
+  100%{ width:200px; height:200px; opacity:0; margin-left:-100px; }
+}
+
+/* ── PROGRESS BAR at bottom ── */
+.intro-progress {
+  position:absolute;
+  bottom:6%; left:50%; transform:translateX(-50%);
+  width:160px; height:2px;
+  background:rgba(255,255,255,0.08);
+  border-radius:2px; overflow:hidden;
+}
+.intro-progress-fill {
+  height:100%; width:0;
+  background:linear-gradient(90deg,#5b8cff,#00f5cc);
+  border-radius:2px;
+  animation: progress-fill 2.8s 0.3s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+@keyframes progress-fill { to { width:100%; } }
+
+/* ── ENTER prompt (flashes before exit) ── */
+.intro-enter {
+  position:absolute;
+  bottom:10%;
+  left:50%; transform:translateX(-50%);
+  font-family:'DM Sans',sans-serif;
+  font-size:0.75rem; font-weight:500;
+  letter-spacing:0.2em; text-transform:uppercase;
+  color:rgba(255,255,255,0.5);
+  white-space:nowrap;
+  opacity:0;
+  animation: enter-blink 0.5s 3.0s ease-in-out 3 forwards;
+}
+@keyframes enter-blink {
+  0%,100%{ opacity:0; }
+  50%    { opacity:1; }
+}
+
+/* Body hidden during intro, shown after */
+#main-content {
+  visibility:hidden;
+}
+#main-content.revealed {
+  visibility:visible;
+}
+
+/* ── SIMPLE LOADER RING (fallback, not used) ── */
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ═══════════════════════════════════════════
+   PARTICLE CANVAS (animated background)
+═══════════════════════════════════════════ */
+#particle-canvas {
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  opacity:0.55;
+}
+
+/* ═══════════════════════════════════════════
+   MOVING GRADIENT BLOBS (parallax with mouse)
+═══════════════════════════════════════════ */
+.bg-orbs {
+  position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;
+}
+.orb {
+  position:absolute; border-radius:50%;
+  filter:blur(90px); opacity:0.3;
+  animation: drift 16s ease-in-out infinite alternate;
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+.orb:nth-child(1) { width:700px;height:700px; background:radial-gradient(circle,var(--accent),transparent 70%); top:-200px;left:-200px; animation-delay:0s; }
+.orb:nth-child(2) { width:550px;height:550px; background:radial-gradient(circle,var(--accent3),transparent 70%); bottom:-120px;right:-120px; animation-delay:-5s; }
+.orb:nth-child(3) { width:420px;height:420px; background:radial-gradient(circle,var(--accent2),transparent 70%); top:45%;left:45%;transform:translate(-50%,-50%); animation-delay:-10s; }
+@keyframes drift {
+  0% { transform: translate(0,0) scale(1); }
+  100% { transform: translate(40px,40px) scale(1.12); }
+}
+[data-theme="dark"] .orb { opacity:0.18; }
+
+/* ═══════════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════════ */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  height:var(--nav-h);
+  display:flex; align-items:center;
+  padding: 0 5%;
+  transition: background 0.4s, box-shadow 0.4s, backdrop-filter 0.4s;
+}
+nav.scrolled {
+  background:var(--surface2);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  box-shadow: var(--shadow), 0 1px 0 var(--border);
+}
+.nav-brand {
+  font-family:'Syne',sans-serif;
+  font-size:1.5rem; font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  letter-spacing:-0.02em;
+}
+.nav-links {
+  display:flex; gap:2rem;
+  list-style:none;
+  margin-left:auto; margin-right:2rem;
+}
+.nav-links a {
+  font-size:0.875rem; font-weight:500;
+  color:var(--text2);
+  transition:color 0.3s;
+  position:relative;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:-4px;left:0;right:0;
+  height:2px; background:linear-gradient(90deg,var(--accent),var(--accent3));
+  transform:scaleX(0); transform-origin:left;
+  transition:transform 0.3s;
+  border-radius:2px;
+}
+.nav-links a:hover, .nav-links a.active { color:var(--accent); }
+.nav-links a:hover::after, .nav-links a.active::after { transform:scaleX(1); }
+.nav-actions { display:flex; gap:0.75rem; align-items:center; }
+#theme-toggle {
+  width:42px;height:42px; border-radius:50%;
+  border:1.5px solid var(--border);
+  background:var(--surface2);
+  backdrop-filter:blur(12px);
+  cursor:pointer; font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s; box-shadow:var(--shadow);
+}
+#theme-toggle:hover { transform:scale(1.12) rotate(22deg); box-shadow: 0 0 20px var(--glow); }
+.hamburger {
+  display:none; flex-direction:column; gap:5px;
+  cursor:pointer; padding:6px;
+}
+.hamburger span { width:24px;height:2px; background:var(--text); transition:all 0.3s; border-radius:2px; }
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu {
+  position:fixed; inset:0; z-index:99;
+  background:var(--surface2); backdrop-filter:blur(36px);
+  -webkit-backdrop-filter:blur(36px);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:2.5rem;
+  transform:translateX(100%);
+  transition:transform 0.5s cubic-bezier(0.23,1,0.32,1);
+}
+.mobile-menu.open { transform:translateX(0); }
+.mobile-menu a { font-family:'Syne',sans-serif; font-size:2rem; font-weight:700; color:var(--text); transition:color 0.3s; }
+.mobile-menu a:hover { color:var(--accent); }
+
+/* ═══════════════════════════════════════════
+   CONTAINER
+═══════════════════════════════════════════ */
+.container { max-width:1200px; margin:0 auto; padding:0 5%; position:relative; z-index:1; }
+
+/* ═══════════════════════════════════════════
+   HERO — 3D TILT CARD, FLOATING, GLOW BORDER
+═══════════════════════════════════════════ */
+#hero {
+  min-height:100vh;
+  display:flex; align-items:center;
+  padding-top:var(--nav-h);
+  padding-bottom: 60px;
+}
+.hero-inner {
+  display:grid;
+  grid-template-columns: 1fr 480px;
+  gap: 5rem;
+  align-items:center;
+  width:100%;
+}
+
+/* Hero text */
+.hero-tag {
+  display:inline-flex; align-items:center; gap:0.5rem;
+  background:linear-gradient(135deg,rgba(45,110,246,0.08),rgba(0,212,177,0.08));
+  border:1px solid var(--border);
+  border-radius:100px; padding:8px 20px;
+  font-size:0.82rem; font-weight:500; color:var(--accent);
+  margin-bottom:1.75rem;
+  backdrop-filter:blur(8px);
+}
+.hero-tag .dot { width:8px;height:8px; background:var(--accent3); border-radius:50%; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.75);} }
+
+.hero-name {
+  font-family:'Syne',sans-serif;
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  font-weight:800; line-height:1.15;
+  letter-spacing:-0.03em;
+  color:var(--text);
+  margin-bottom:0.6rem;
+  display:flex; flex-wrap:wrap; gap:0.18em;
+  align-items:center;
+}
+.hero-name .word {
+  display:inline-block;
+  animation: fadeSlideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity:0;
+}
+.hero-name .word:nth-child(1) { animation-delay:0.1s; }
+.hero-name .word:nth-child(2) { animation-delay:0.3s; }
+.hero-name .word:nth-child(3) { animation-delay:0.5s; }
+@keyframes fadeSlideUp {
+  from { opacity:0; transform:translateY(36px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.hero-name .gradient-text {
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 0 28px rgba(91,140,255,0.45));
+}
+.hero-typing {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.1rem,2.5vw,1.7rem);
+  font-weight:600; color:var(--accent2);
+  min-height:2.4rem; margin-bottom:1.75rem;
+}
+.cursor { border-right:2px solid var(--accent); animation:blink 0.7s infinite; }
+@keyframes blink { 0%,50%{opacity:1;} 51%,100%{opacity:0;} }
+.hero-desc {
+  color:var(--text2); line-height:1.8; font-size:1.05rem;
+  margin-bottom:2.75rem; max-width:520px;
+}
+.hero-btns { display:flex; gap:1rem; flex-wrap:wrap; }
+.btn {
+  display:inline-flex; align-items:center; gap:0.5rem;
+  padding:15px 32px; border-radius:100px;
+  font-weight:600; font-size:0.95rem;
+  cursor:pointer; border:none;
+  transition:all 0.35s cubic-bezier(0.23,1,0.32,1); position:relative; overflow:hidden;
+}
+.btn-primary {
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;
+  box-shadow:0 8px 28px var(--glow);
+}
+.btn-primary:hover { transform:translateY(-4px) scale(1.02); box-shadow:0 16px 40px var(--glow); }
+.btn-outline {
+  background:var(--surface2);
+  backdrop-filter:blur(12px);
+  color:var(--accent);
+  border:1.5px solid var(--border);
+}
+.btn-outline:hover { background:var(--accent); color:#fff; transform:translateY(-4px); border-color:var(--accent); box-shadow:0 12px 32px var(--glow); }
+/* Ripple on btn click */
+.btn::after {
+  content:''; position:absolute;
+  width:200%; height:200%; top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background:rgba(255,255,255,0.22); border-radius:50%;
+  transition:transform 0.5s, opacity 0.5s;
+}
+.btn:active::after { transform:translate(-50%,-50%) scale(1); opacity:0; }
+
+/* ── 3D PHOTO CARD ──
+   Uses perspective + mouse-tracking tilt via JS
+   transform-style: preserve-3d creates real depth layers
+*/
+.hero-visual {
+  display:flex; align-items:center; justify-content:center;
+}
+/* Perspective container for the tilt effect */
+.hero-photo-perspective {
+  perspective: 900px;
+  perspective-origin: 50% 50%;
+}
+.hero-photo-wrap {
+  position: relative;
+  width: 420px;
+  height: 520px;
+  transform-style: preserve-3d;
+  transition: transform 0.08s linear;
+  will-change: transform;
+}
+
+/* Animated gradient border ring — rotates around card */
+.hero-photo-wrap::before {
+  content:'';
+  position: absolute;
+  inset: -3px;
+  border-radius: 44px;
+  background: conic-gradient(
+    from var(--glow-angle, 0deg),
+    var(--accent),
+    var(--accent3),
+    var(--accent2),
+    var(--accent3),
+    var(--accent)
+  );
+  animation: rotate-border 4s linear infinite;
+  z-index: 0;
+  filter: blur(1px);
+}
+@property --glow-angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
+@keyframes rotate-border { to { --glow-angle: 360deg; } }
+/* Fallback for browsers without @property */
+@supports not (background: conic-gradient(from 0deg, red)) {
+  .hero-photo-wrap::before {
+    background: linear-gradient(135deg, var(--accent), var(--accent3), var(--accent2));
+    animation: spin-slow 4s linear infinite;
+  }
+}
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+
+/* Glow bloom behind the card */
+.hero-photo-wrap::after {
+  content:'';
+  position: absolute;
+  inset: 20px;
+  border-radius: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  opacity: 0.22;
+  filter: blur(36px);
+  z-index: 0;
+  animation: glow-pulse 3.5s ease-in-out infinite alternate;
+}
+@keyframes glow-pulse { 0%{opacity:0.18;filter:blur(30px);} 100%{opacity:0.32;filter:blur(50px);} }
+
+/* The card itself — floating + 3D depth */
+.photo-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 40px;
+  overflow: hidden;
+  border: 1.5px solid rgba(255,255,255,0.12);
+  box-shadow: var(--shadow-3d);
+  /* Floating up/down animation */
+  animation: float3d 6s ease-in-out infinite;
+  z-index: 1;
+  background: var(--surface);
+  transform-style: preserve-3d;
+  /* Glassmorphism */
+  backdrop-filter: blur(8px);
+}
+@keyframes float3d {
+  0%,100%{ transform: translateY(0px) translateZ(0px); }
+  50%{ transform: translateY(-16px) translateZ(8px); }
+}
+
+/* Shine/reflection sweep on hover (injected via JS) */
+.photo-card::after {
+  content:'';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.08) 50%,
+    transparent 60%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.0s;
+  z-index: 3;
+  pointer-events: none;
+}
+.photo-card.shine-active::after {
+  transform: translateX(120%);
+  transition: transform 0.6s cubic-bezier(0.23,1,0.32,1);
+}
+
+.photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: none;
+}
+.photo-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: linear-gradient(160deg, var(--surface), var(--bg2));
+}
+.photo-fallback .big-emoji { font-size: 6rem; }
+.photo-fallback .fallback-name {
+  font-family:'Syne',sans-serif; font-weight:700; font-size:1.2rem; color: var(--text);
+}
+.photo-fallback .fallback-role { font-size:0.85rem; color:var(--accent); font-weight:500; }
+
+/* Glassmorphism overlay badge — sits in front of the 3D stack */
+.photo-badge {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateZ(20px); /* Z-lift using preserve-3d */
+  white-space: nowrap;
+  background: var(--surface2);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 100px;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  z-index: 4;
+}
+.badge-stat { text-align:center; }
+.badge-stat-num {
+  font-family:'Syne',sans-serif;
+  font-weight:800; font-size:1.1rem;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.badge-stat-label { font-size:0.65rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.07em; }
+.badge-divider { width:1px; height:28px; background:var(--border); }
+
+/* ═══════════════════════════════════════════
+   SECTION HEADERS
+═══════════════════════════════════════════ */
+.section-header { text-align:center; margin-bottom:4.5rem; }
+.section-label {
+  font-size:0.75rem; font-weight:600; letter-spacing:0.14em;
+  text-transform:uppercase; color:var(--accent);
+  display:inline-block; margin-bottom:0.8rem;
+}
+.section-title {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2rem,4vw,2.9rem);
+  font-weight:800; letter-spacing:-0.025em;
+  color:var(--text); line-height:1.1;
+}
+.section-title span {
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ═══════════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════════ */
+#about { background:var(--bg2); }
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center; }
+.about-text p { color:var(--text2); line-height:1.85; font-size:1.05rem; margin-bottom:1rem; }
+.objective-box {
+  background:var(--surface2);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  border-left:3px solid var(--accent);
+  border-radius:var(--radius-sm);
+  padding:2rem;
+  box-shadow:var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.objective-box:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+.objective-box h3 { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; margin-bottom:0.75rem; color:var(--accent); }
+.objective-box p { color:var(--text2); line-height:1.8; font-size:0.95rem; }
+
+/* ═══════════════════════════════════════════
+   EDUCATION — 3D DEPTH TIMELINE CARDS
+   Cards animate in with translateY + rotateX on scroll
+═══════════════════════════════════════════ */
+.timeline { position:relative; padding-left:2rem; }
+.timeline::before {
+  content:''; position:absolute;
+  left:0; top:0; bottom:0; width:2px;
+  background:linear-gradient(to bottom, var(--accent), var(--accent3));
+  border-radius:2px;
+}
+.timeline-item { position:relative; margin-bottom:3rem; padding-left:2.5rem; }
+.timeline-item:last-child { margin-bottom:0; }
+.timeline-dot {
+  position:absolute; left:-2.7rem; top:0.3rem;
+  width:20px;height:20px; border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  box-shadow:0 0 0 4px var(--bg), 0 0 24px var(--glow);
+  border:2px solid var(--surface);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.timeline-item:hover .timeline-dot {
+  transform:scale(1.3);
+  box-shadow:0 0 0 6px var(--bg), 0 0 30px var(--glow);
+}
+.timeline-year { font-size:0.75rem; font-weight:600; color:var(--accent3); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem; }
+
+/* 3D Timeline Card — has depth via box-shadow layering and transform on hover */
+.timeline-card {
+  background:var(--surface2);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:1.6rem;
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s;
+  position:relative; overflow:hidden;
+}
+/* Subtle shine top edge */
+.timeline-card::before {
+  content:'';
+  position:absolute; top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);
+}
+.timeline-card:hover {
+  transform: translateX(10px) translateY(-4px) rotateY(-2deg);
+  box-shadow: var(--shadow-3d);
+}
+.timeline-card h3 { font-family:'Syne',sans-serif; font-weight:700; font-size:1.1rem; margin-bottom:0.25rem; }
+.timeline-card p { color:var(--text2); font-size:0.9rem; margin-bottom:0.5rem; }
+.timeline-badge {
+  display:inline-block;
+  background:linear-gradient(135deg,rgba(91,140,255,0.12),rgba(0,245,204,0.12));
+  border:1px solid var(--border); border-radius:100px;
+  padding:3px 14px; font-size:0.78rem; font-weight:600; color:var(--accent);
+}
+.edu-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+.edu-right { padding-top:1rem; }
+.edu-right h3 { font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:700; margin-bottom:0.5rem; }
+.edu-right p { color:var(--text2); line-height:1.7; }
+
+/* ═══════════════════════════════════════════
+   PROJECTS — INTERACTIVE 3D CARDS
+   Each card tracks mouse for rotateX/rotateY
+   Shadow changes with card tilt position
+   Shine sweep on hover entry
+═══════════════════════════════════════════ */
+#projects { background:var(--bg2); }
+.projects-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.75rem; }
+
+/* Perspective wrapper per card — this is the 3D parent */
+.project-card-perspective {
+  perspective: 800px;
+}
+.project-card {
+  background:var(--surface2);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:2.25rem;
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: box-shadow 0.15s linear;
+  position:relative; overflow:hidden; cursor:default;
+  transform-style: preserve-3d;
+  will-change: transform;
+  /* Float animation — offset per card via JS-added delay */
+  animation: cardFloat 7s ease-in-out infinite;
+}
+@keyframes cardFloat {
+  0%,100% { transform: translateY(0) translateZ(0); }
+  50% { transform: translateY(-8px) translateZ(4px); }
+}
+
+/* Gradient background overlay */
+.project-card::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(91,140,255,0.06),rgba(0,245,204,0.04));
+  opacity:0; transition:opacity 0.4s;
+  border-radius:var(--radius);
+}
+/* Shine sweep element */
+.project-card::after {
+  content:'';
+  position:absolute; top:0; left:-100%; width:60%; height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,0.1),transparent);
+  transform:skewX(-20deg);
+  transition:none;
+  z-index:2; pointer-events:none;
+}
+.project-card:hover::before { opacity:1; }
+/* Shine triggered by class (JS) */
+.project-card.shine::after {
+  left:160%;
+  transition:left 0.65s cubic-bezier(0.23,1,0.32,1);
+}
+
+/* Dynamic shadow — shifts based on tilt (handled in JS) */
+.project-card.tilting {
+  animation-play-state: paused;
+}
+
+.project-icon {
+  width:54px;height:54px; border-radius:16px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem; margin-bottom:1.35rem;
+  box-shadow:0 6px 20px var(--glow);
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s;
+  /* Lifted slightly in Z for depth */
+  transform: translateZ(20px);
+}
+.project-card:hover .project-icon {
+  transform: translateZ(30px) scale(1.12) rotate(-6deg);
+  box-shadow: 0 10px 30px var(--glow);
+}
+.project-tag {
+  display:inline-block; font-size:0.7rem; font-weight:600;
+  color:var(--accent3); background:rgba(0,245,204,0.08);
+  border:1px solid rgba(0,245,204,0.2); border-radius:100px;
+  padding:3px 12px; margin-bottom:0.8rem;
+  letter-spacing:0.07em; text-transform:uppercase;
+  transform: translateZ(10px);
+}
+.project-card h3 {
+  font-family:'Syne',sans-serif; font-weight:700; font-size:1.05rem; margin-bottom:0.75rem;
+  transform: translateZ(15px); position:relative;
+}
+.project-card p {
+  color:var(--text2); font-size:0.9rem; line-height:1.72;
+  transform: translateZ(5px); position:relative;
+}
+
+/* ═══════════════════════════════════════════
+   SKILLS — 3D FLOATING CHIPS
+   Tags appear as elevated chips with glow shadows
+═══════════════════════════════════════════ */
+.skills-container { display:grid; grid-template-columns:1fr 1fr; gap:3.5rem; }
+.skills-col h3 { font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:700; margin-bottom:1.5rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.09em; }
+.skill-bar { margin-bottom:1.6rem; }
+.skill-bar-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
+.skill-name { font-weight:500; font-size:0.9rem; }
+.skill-pct { font-size:0.8rem; font-weight:600; color:var(--accent); }
+.skill-track {
+  height:6px;
+  background:var(--border);
+  border-radius:100px; overflow:hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+.skill-fill {
+  height:100%; width:0;
+  background:linear-gradient(90deg,var(--accent),var(--accent3));
+  border-radius:100px;
+  transition:width 1.4s cubic-bezier(0.23,1,0.32,1);
+  box-shadow: 0 0 12px rgba(91,140,255,0.5);
+  position:relative;
+}
+/* Glow tip on skill bar */
+.skill-fill::after {
+  content:'';
+  position:absolute; right:0; top:50%; transform:translateY(-50%);
+  width:10px; height:10px; border-radius:50%;
+  background:var(--accent3);
+  box-shadow: 0 0 10px var(--accent3);
+}
+.skill-tags { display:flex; flex-wrap:wrap; gap:0.8rem; }
+
+/* 3D floating chip effect */
+.skill-tag {
+  background:var(--surface2);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--border);
+  border-radius:100px;
+  padding:9px 20px;
+  font-size:0.85rem; font-weight:500;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.3s,
+              background 0.3s,
+              border-color 0.3s;
+  cursor:default;
+  /* Subtle bottom shadow creates floating chip look */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.06) inset;
+  position:relative; overflow:hidden;
+}
+/* Chip shine edge */
+.skill-tag::before {
+  content:'';
+  position:absolute; top:0;left:0;right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+}
+.skill-tag:hover {
+  transform: translateY(-6px) scale(1.06);
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff; border-color:transparent;
+  box-shadow: 0 12px 32px var(--glow), 0 0 24px var(--glow);
+}
+
+/* ═══════════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════════ */
+#contact { background:var(--bg2); }
+.contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+.contact-intro h3 { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; margin-bottom:1rem; }
+.contact-intro p { color:var(--text2); line-height:1.7; margin-bottom:2rem; }
+.contact-links { display:flex; flex-direction:column; gap:1rem; }
+.contact-link {
+  display:flex; align-items:center; gap:1rem;
+  background:var(--surface2); backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  padding:1rem 1.5rem;
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.05);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.contact-link:hover {
+  transform:translateX(10px) translateY(-2px);
+  border-color:var(--accent);
+  box-shadow: var(--shadow-3d);
+}
+.contact-link-icon {
+  width:44px;height:44px; border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem; flex-shrink:0;
+  box-shadow:0 4px 16px var(--glow);
+  transition:transform 0.3s, box-shadow 0.3s;
+}
+.contact-link:hover .contact-link-icon {
+  transform:scale(1.1) rotate(-5deg);
+  box-shadow:0 8px 24px var(--glow);
+}
+.contact-link-info small { font-size:0.7rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px; }
+.contact-link-info span { font-weight:500; font-size:0.9rem; }
+.contact-socials { display:flex; gap:1rem; margin-top:2rem; }
+.social-btn {
+  width:50px;height:50px; border-radius:14px;
+  background:var(--surface2); border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem; transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1); box-shadow:var(--shadow);
+}
+.social-btn:hover {
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff; transform:translateY(-6px) scale(1.08);
+  box-shadow:0 12px 28px var(--glow); border-color:transparent;
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer {
+  text-align:center; padding:2.5rem; font-size:0.85rem; color:var(--text2);
+  border-top:1px solid var(--border); position:relative; z-index:1;
+  background: var(--bg);
+}
+
+/* ═══════════════════════════════════════════
+   SCROLL TO TOP
+═══════════════════════════════════════════ */
+#scroll-top {
+  position:fixed; bottom:2rem; right:2rem; z-index:50;
+  width:50px;height:50px; border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff; border:none; cursor:pointer; font-size:1.2rem;
+  box-shadow:0 8px 28px var(--glow);
+  opacity:0; pointer-events:none; transform:translateY(20px);
+  transition:all 0.4s cubic-bezier(0.23,1,0.32,1);
+  display:flex;align-items:center;justify-content:center;
+}
+#scroll-top.show { opacity:1; pointer-events:all; transform:translateY(0); }
+#scroll-top:hover { transform:translateY(-5px) scale(1.1); box-shadow:0 14px 36px var(--glow); }
+
+/* ═══════════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════════ */
+.reveal { opacity:0; transform:translateY(44px); transition:opacity 0.75s cubic-bezier(0.23,1,0.32,1), transform 0.75s cubic-bezier(0.23,1,0.32,1); }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-left { opacity:0; transform:translateX(-44px); transition:opacity 0.75s cubic-bezier(0.23,1,0.32,1), transform 0.75s cubic-bezier(0.23,1,0.32,1); }
+.reveal-left.visible { opacity:1; transform:translateX(0); }
+.reveal-right { opacity:0; transform:translateX(44px); transition:opacity 0.75s cubic-bezier(0.23,1,0.32,1), transform 0.75s cubic-bezier(0.23,1,0.32,1); }
+.reveal-right.visible { opacity:1; transform:translateX(0); }
+.delay-1 { transition-delay:0.1s; }
+.delay-2 { transition-delay:0.2s; }
+.delay-3 { transition-delay:0.3s; }
+.delay-4 { transition-delay:0.4s; }
+
+/* ═══════════════════════════════════════════
+   ANIMATED GRADIENT BORDER UTILITY
+═══════════════════════════════════════════ */
+.grad-border {
+  position:relative;
+}
+.grad-border::before {
+  content:'';
+  position:absolute; inset:-1px;
+  border-radius:inherit;
+  background:linear-gradient(135deg,var(--accent),var(--accent3),var(--accent2));
+  background-size:200% 200%;
+  animation:grad-move 4s ease infinite;
+  z-index:-1;
+  opacity:0;
+  transition:opacity 0.3s;
+}
+.grad-border:hover::before { opacity:1; }
+@keyframes grad-move {
+  0%,100%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media(max-width:900px) {
+  .hero-inner { grid-template-columns:1fr; text-align:center; gap:3rem; }
+  .hero-visual { order:-1; }
+  .hero-photo-wrap { width:280px; height:340px; }
+  .photo-badge { padding:8px 18px; gap:1rem; }
+  .hero-desc { margin:0 auto 2.5rem; }
+  .hero-btns { justify-content:center; }
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+}
+@media(max-width:768px) {
+  .about-grid, .edu-grid, .skills-container, .contact-grid { grid-template-columns:1fr; }
+  .edu-right { padding-top:0; }
+  section { padding:80px 0; }
+  .hero-photo-wrap { width:260px; height:320px; }
+  /* Disable tilt on touch devices */
+  .hero-photo-wrap, .project-card { transition:transform 0.5s cubic-bezier(0.23,1,0.32,1); }
+}
+@media(max-width:480px) {
+  .hero-photo-wrap { width:220px; height:275px; }
+  .photo-badge { gap:0.75rem; padding:7px 14px; font-size:0.85rem; }
+  .hero-name { font-size:clamp(2.2rem,10vw,3.2rem); }
+}
+
+/* ── Reduced Motion ── */
+@media(prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     CINEMATIC INTRO OVERLAY
+     Sequence: grid floor → name → character runs
+     → impact burst → page reveals
+══════════════════════════════════════════ -->
+<div id="intro-overlay">
+  <div class="intro-floor"></div>
+  <div class="intro-scanlines"></div>
+  <div class="intro-name"><span>Sakthivel V</span></div>
+  <div class="intro-tagline">Portfolio · 2025</div>
+  <div class="speed-lines">
+    <div class="speed-line"></div>
+    <div class="speed-line"></div>
+    <div class="speed-line"></div>
+    <div class="speed-line"></div>
+  </div>
+  <div class="char-shadow"></div>
+  <div class="char-wrap" id="charWrap">
+    <div class="char-3d">
+      <div class="c-head"></div>
+      <div class="c-body"></div>
+      <div class="c-arm c-arm-l"></div>
+      <div class="c-arm c-arm-r"></div>
+      <div class="c-leg c-leg-l"><div class="c-foot"></div></div>
+      <div class="c-leg c-leg-r"><div class="c-foot"></div></div>
+    </div>
+  </div>
+  <div class="impact-burst"></div>
+  <div class="impact-ring"></div>
+  <div class="intro-progress"><div class="intro-progress-fill"></div></div>
+  <div class="intro-enter">▶ Entering Portfolio</div>
+</div>
+
+<!-- ALL MAIN PORTFOLIO CONTENT — hidden until intro done -->
+<div id="main-content">
+
+<!-- ── Particle Canvas ── -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- ── Gradient Blobs (mouse-parallax via JS) ── -->
+<div class="bg-orbs">
+  <div class="orb" id="orb1"></div>
+  <div class="orb" id="orb2"></div>
+  <div class="orb" id="orb3"></div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <span class="nav-brand">SV</span>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button id="theme-toggle" title="Toggle theme">☀️</button>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#hero" class="mob-link">Home</a>
+  <a href="#about" class="mob-link">About</a>
+  <a href="#education" class="mob-link">Education</a>
+  <a href="#projects" class="mob-link">Projects</a>
+  <a href="#skills" class="mob-link">Skills</a>
+  <a href="#contact" class="mob-link">Contact</a>
+</div>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+
+      <!-- LEFT: Text -->
+      <div class="hero-content">
+        <div class="hero-tag reveal">
+          <span class="dot"></span> Available for Internships &amp; Projects
+        </div>
+        <h1 class="hero-name reveal delay-1">
+          <span class="word">Hi,</span>
+          <span class="word">I'm</span>
+          <span class="word gradient-text">Sakthivel V</span>
+        </h1>
+        <div class="hero-typing reveal delay-2">
+          <span id="typing-text"></span><span class="cursor"> </span>
+        </div>
+        <p class="hero-desc reveal delay-3">
+          ECE student with a passion for building practical, user-friendly applications. I blend hardware knowledge with software skills to create meaningful digital experiences.
+        </p>
+        <div class="hero-btns reveal delay-4">
+          <a href="#projects" class="btn btn-primary">🚀 View Projects</a>
+          <a href="#contact" class="btn btn-outline">✉️ Contact Me</a>
+        </div>
+      </div>
+
+      <!-- RIGHT: 3D Photo Card with tilt + glow border + floating -->
+      <div class="hero-visual reveal-right">
+        <!-- Perspective wrapper — required for 3D tilt JS to work -->
+        <div class="hero-photo-perspective">
+          <div class="hero-photo-wrap" id="photoWrap">
+            <div class="photo-card" id="photoCard">
+              <!--
+                📸 TO ADD YOUR PHOTO:
+                1. Put your photo file (e.g. sakthi.jpg) in the same folder as this HTML
+                2. Change MY_PHOTO in the script to your filename
+              -->
+              <img id="avatar-img" src="" alt="Sakthivel V" />
+              <div class="photo-fallback" id="avatar-fallback">
+                <div class="big-emoji">👨‍💻</div>
+                <div class="fallback-name">Sakthivel V</div>
+                <div class="fallback-role">Flutter &amp; Web Developer</div>
+              </div>
+            </div>
+            <!-- Glassmorphism stats badge — Z-lifted via preserve-3d -->
+            <div class="photo-badge">
+              <div class="badge-stat">
+                <div class="badge-stat-num">3+</div>
+                <div class="badge-stat-label">Projects</div>
+              </div>
+              <div class="badge-divider"></div>
+              <div class="badge-stat">
+                <div class="badge-stat-num">2</div>
+                <div class="badge-stat-label">Hackathons</div>
+              </div>
+              <div class="badge-divider"></div>
+              <div class="badge-stat">
+                <div class="badge-stat-num">5+</div>
+                <div class="badge-stat-label">Skills</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ ABOUT ═══════════════ -->
+<section id="about">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Who I Am</div>
+      <h2 class="section-title">About <span>Me</span></h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal-left">
+        <p>I'm an Electronics and Communication Engineering student at Kongu Engineering College with a deep interest in software and mobile development. My background in embedded systems gives me a unique perspective when building IoT-integrated solutions.</p>
+        <p>I've participated in multiple hackathons, built real-world applications, and I'm always eager to learn and collaborate. I believe great software is both functional and delightful to use.</p>
+      </div>
+      <div class="objective-box grad-border reveal-right">
+        <h3>🎯 Career Objective</h3>
+        <p>ECE student with a strong interest in software development, Android app development, Flutter, and web development. Passionate about building practical, user-friendly applications. Eager to start a career as a Software Engineer and grow in a collaborative development environment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ EDUCATION ═══════════════ -->
+<section id="education">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Academic Journey</div>
+      <h2 class="section-title">My <span>Education</span></h2>
+    </div>
+    <div class="edu-grid">
+      <div class="reveal-left">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2023 — Present</div>
+            <div class="timeline-card">
+              <h3>B.E – Electronics &amp; Communication Engineering</h3>
+              <p>Kongu Engineering College, Tamil Nadu</p>
+              <span class="timeline-badge">CGPA: 6.85</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2021 — 2023</div>
+            <div class="timeline-card">
+              <h3>HSC (Higher Secondary)</h3>
+              <p>Valluvar Vidhyalaya, Tamil Nadu</p>
+              <span class="timeline-badge">71%</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2017 — 2021</div>
+            <div class="timeline-card">
+              <h3>SSLC (Secondary School)</h3>
+              <p>Valluvar Vidhyalaya, Tamil Nadu</p>
+              <span class="timeline-badge">Completed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="edu-right reveal-right">
+        <h3>📚 Areas of Interest</h3>
+        <p style="color:var(--text2);line-height:1.8;margin-top:0.75rem;">My coursework in ECE combined with self-driven learning has shaped my interests in:</p>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-top:1.5rem;">
+          <div class="contact-link" style="cursor:default;">
+            <div class="contact-link-icon">📱</div>
+            <div><small>Primary Focus</small><span style="display:block;font-weight:500;">Mobile App Development</span></div>
+          </div>
+          <div class="contact-link" style="cursor:default;">
+            <div class="contact-link-icon">🌐</div>
+            <div><small>Secondary Focus</small><span style="display:block;font-weight:500;">Web Development</span></div>
+          </div>
+          <div class="contact-link" style="cursor:default;">
+            <div class="contact-link-icon">⚙️</div>
+            <div><small>Background</small><span style="display:block;font-weight:500;">Embedded Systems &amp; IoT</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PROJECTS ═══════════════ -->
+<section id="projects">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">What I've Built</div>
+      <h2 class="section-title">Featured <span>Projects</span></h2>
+    </div>
+    <div class="projects-grid">
+      <!-- Each card wrapped in a perspective div for independent 3D tilt -->
+      <div class="project-card-perspective reveal delay-1">
+        <div class="project-card" style="animation-delay:0s;">
+          <div class="project-icon">🏠</div>
+          <div class="project-tag">Hackathon — Dr. Mahalingam</div>
+          <h3>AI-Based Smart Home Control System</h3>
+          <p>Developed an IoT-based smart home automation system to control home appliances using sensor-based decision logic. Designed a dashboard interface for real-time monitoring and appliance management.</p>
+        </div>
+      </div>
+      <div class="project-card-perspective reveal delay-2">
+        <div class="project-card" style="animation-delay:0.8s;">
+          <div class="project-icon">💓</div>
+          <div class="project-tag">Hackathon — Kongu Engineering</div>
+          <h3>Health Monitoring System</h3>
+          <p>Built a health monitoring system to track basic health parameters using sensors and IoT concepts. Developed a dashboard for real-time visualization of health values and sensor data.</p>
+        </div>
+      </div>
+      <div class="project-card-perspective reveal delay-3">
+        <div class="project-card" style="animation-delay:1.6s;">
+          <div class="project-icon">🏫</div>
+          <div class="project-tag">Web Development</div>
+          <h3>School Website Development</h3>
+          <p>Designed and created a web page for my school using HTML, CSS, and basic JavaScript. Built a clean, user-friendly interface with organized layout and responsive design.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SKILLS ═══════════════ -->
+<section id="skills">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">What I Know</div>
+      <h2 class="section-title">My <span>Skills</span></h2>
+    </div>
+    <div class="skills-container">
+      <div class="reveal-left">
+        <h3 class="skills-col">Technical Proficiency</h3>
+        <div class="skill-bar">
+          <div class="skill-bar-top"><span class="skill-name">Flutter / Dart</span><span class="skill-pct">80%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="80"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-top"><span class="skill-name">Android Development</span><span class="skill-pct">70%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="70"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-top"><span class="skill-name">HTML &amp; CSS</span><span class="skill-pct">75%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="75"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-top"><span class="skill-name">JavaScript (Basic)</span><span class="skill-pct">55%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="55"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-top"><span class="skill-name">Embedded Systems</span><span class="skill-pct">65%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="65"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-top"><span class="skill-name">Git &amp; GitHub</span><span class="skill-pct">60%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="60"></div></div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <h3 class="skills-col">Technologies &amp; Tools</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Flutter</span>
+          <span class="skill-tag">Dart</span>
+          <span class="skill-tag">Android Studio</span>
+          <span class="skill-tag">HTML5</span>
+          <span class="skill-tag">CSS3</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">Git</span>
+          <span class="skill-tag">GitHub</span>
+          <span class="skill-tag">IoT</span>
+          <span class="skill-tag">Sensors</span>
+          <span class="skill-tag">Dashboard Design</span>
+          <span class="skill-tag">Responsive Design</span>
+          <span class="skill-tag">Mobile UI/UX</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CONTACT ═══════════════ -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Get In Touch</div>
+      <h2 class="section-title">Let's <span>Connect</span></h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-intro reveal-left">
+        <h3>Open to opportunities 👋</h3>
+        <p>Whether it's an internship, project collaboration, or just a chat about tech — my inbox is always open. Let's build something great together!</p>
+        <div class="contact-socials">
+          <a href="https://github.com/sakthivelv05" target="_blank" class="social-btn" title="GitHub">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+          <a href="https://linkedin.com/in/sakthivel05/" target="_blank" class="social-btn" title="LinkedIn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="contact-links reveal-right">
+        <a href="tel:9345419405" class="contact-link">
+          <div class="contact-link-icon">📞</div>
+          <div class="contact-link-info">
+            <small>Phone</small>
+            <span>+91 9345419405</span>
+          </div>
+        </a>
+        <a href="mailto:sakthivelvelmurugan7815@gmail.com" class="contact-link">
+          <div class="contact-link-icon">✉️</div>
+          <div class="contact-link-info">
+            <small>Email</small>
+            <span>sakthivelvelmurugan7815@gmail.com</span>
+          </div>
+        </a>
+        <a href="https://github.com/sakthivelv05" target="_blank" class="contact-link">
+          <div class="contact-link-icon" style="font-size:1rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </div>
+          <div class="contact-link-info">
+            <small>GitHub</small>
+            <span>github.com/sakthivelv05</span>
+          </div>
+        </a>
+        <a href="https://linkedin.com/in/sakthivel05/" target="_blank" class="contact-link">
+          <div class="contact-link-icon" style="font-size:1rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </div>
+          <div class="contact-link-info">
+            <small>LinkedIn</small>
+            <span>linkedin.com/in/sakthivel05</span>
+          </div>
+        </a>
+        <a href="#" class="contact-link" style="cursor:default;">
+          <div class="contact-link-icon">📍</div>
+          <div class="contact-link-info">
+            <small>Location</small>
+            <span>Srivilliputhur, Tamil Nadu</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Designed &amp; Built by <strong>Sakthivel V</strong> · 2025 · All rights reserved</p>
+</footer>
+
+<button id="scroll-top" title="Back to top">↑</button>
+
+</div><!-- /main-content -->
+
+<script>
+/* ══════════════════════════════════════════════
+   PARTICLE BACKGROUND
+   Lightweight canvas-based floating dots
+   Performance: requestAnimationFrame + limited count
+══════════════════════════════════════════════ */
+(function initParticles() {
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  const COUNT = window.innerWidth < 768 ? 40 : 80; // fewer on mobile
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function randomParticle() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.8 + 0.4,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      opacity: Math.random() * 0.5 + 0.1,
+    };
+  }
+  for (let i = 0; i < COUNT; i++) particles.push(randomParticle());
+
+  function getAccentColor() {
+    return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#5b8cff';
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const color = getAccentColor();
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < -5) p.x = W + 5;
+      if (p.x > W + 5) p.x = -5;
+      if (p.y < -5) p.y = H + 5;
+      if (p.y > H + 5) p.y = -5;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.globalAlpha = p.opacity;
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════════════
+   MOUSE PARALLAX — orb blobs + hero photo subtle shift
+   Orbs move slightly opposite to mouse for depth
+══════════════════════════════════════════════ */
+(function initParallax() {
+  const orb1 = document.getElementById('orb1');
+  const orb2 = document.getElementById('orb2');
+  const orb3 = document.getElementById('orb3');
+  let mx = 0, my = 0, tx1 = 0, ty1 = 0, tx2 = 0, ty2 = 0;
+
+  document.addEventListener('mousemove', e => {
+    const nx = (e.clientX / window.innerWidth - 0.5);  // -0.5 to 0.5
+    const ny = (e.clientY / window.innerHeight - 0.5);
+    mx = nx; my = ny;
+  });
+
+  function animateOrbs() {
+    // Smooth lerp for butter movement
+    tx1 += (mx * 60 - tx1) * 0.06;
+    ty1 += (my * 60 - ty1) * 0.06;
+    tx2 += (-mx * 40 - tx2) * 0.04;
+    ty2 += (-my * 40 - ty2) * 0.04;
+
+    orb1.style.transform = `translate(${tx1}px, ${ty1}px) scale(1)`;
+    orb2.style.transform = `translate(${tx2}px, ${ty2}px) scale(1)`;
+    orb3.style.transform = `translate(${-tx1 * 0.5}px, ${-ty1 * 0.5}px) translate(-50%,-50%) scale(1)`;
+    requestAnimationFrame(animateOrbs);
+  }
+  animateOrbs();
+})();
+
+/* ══════════════════════════════════════════════
+   HERO PHOTO — 3D TILT EFFECT
+   Mouse position relative to card center drives
+   rotateX (vertical tilt) and rotateY (horizontal tilt)
+   Shine sweep triggers on mouse enter
+══════════════════════════════════════════════ */
+(function initHeroTilt() {
+  const wrap = document.getElementById('photoWrap');
+  const card = document.getElementById('photoCard');
+  if (!wrap || !card) return;
+
+  // Only on non-touch desktop
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  let isHovering = false;
+  const MAX_TILT = 14; // degrees
+  let currentX = 0, currentY = 0, targetX = 0, targetY = 0;
+
+  wrap.addEventListener('mouseenter', () => {
+    isHovering = true;
+    // Trigger shine sweep on enter
+    card.classList.remove('shine-active');
+    void card.offsetWidth; // reflow to restart animation
+    card.classList.add('shine-active');
+    // Pause float animation while tilting
+    card.style.animation = 'none';
+  });
+
+  wrap.addEventListener('mouseleave', () => {
+    isHovering = false;
+    targetX = 0; targetY = 0;
+    // Resume float animation
+    setTimeout(() => { card.style.animation = ''; }, 400);
+  });
+
+  wrap.addEventListener('mousemove', e => {
+    const rect = wrap.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);   // -1 to 1
+    const dy = (e.clientY - cy) / (rect.height / 2);  // -1 to 1
+
+    // rotateY from horizontal mouse (left = negative, right = positive)
+    // rotateX from vertical mouse (up = positive, down = negative — inverted for natural feel)
+    targetY = dx * MAX_TILT;
+    targetX = -dy * MAX_TILT;
+
+    // Dynamic shadow based on tilt direction
+    const shadowX = -dx * 20;
+    const shadowY = -dy * 20;
+    wrap.style.filter = `drop-shadow(${shadowX}px ${shadowY}px 40px rgba(91,140,255,0.4))`;
+  });
+
+  // Smooth lerp animation loop
+  function animateTilt() {
+    currentX += (targetX - currentX) * 0.12;
+    currentY += (targetY - currentY) * 0.12;
+    wrap.style.transform = `rotateX(${currentX}deg) rotateY(${currentY}deg)`;
+    requestAnimationFrame(animateTilt);
+  }
+  animateTilt();
+})();
+
+/* ══════════════════════════════════════════════
+   PROJECT CARDS — 3D TILT + DYNAMIC SHADOW + SHINE
+   Each card independently tracks mouse inside it
+   Shadow x/y shifts to appear as real-world lighting
+══════════════════════════════════════════════ */
+(function initCardTilt() {
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  document.querySelectorAll('.project-card').forEach(card => {
+    const MAX = 12;
+    let tx = 0, ty = 0, cx = 0, cy = 0;
+    let rafId = null;
+
+    card.addEventListener('mouseenter', () => {
+      card.classList.add('tilting', 'shine');
+      // Reset shine class then add to trigger sweep
+      setTimeout(() => card.classList.remove('shine'), 700);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      tx = 0; ty = 0;
+      card.classList.remove('tilting');
+      card.style.boxShadow = '';
+    });
+
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const dx = (e.clientX - rect.left) / rect.width - 0.5;   // -0.5 to 0.5
+      const dy = (e.clientY - rect.top) / rect.height - 0.5;
+      tx = dy * -MAX;
+      ty = dx * MAX;
+      // Dynamic shadow: shifts opposite to tilt for depth illusion
+      const sx = -dx * 30;
+      const sy = -dy * 30;
+      card.style.boxShadow = `${sx}px ${sy}px 60px rgba(91,140,255,0.2), 0 20px 60px rgba(0,0,0,0.35)`;
+    });
+
+    function loop() {
+      cx += (tx - cx) * 0.1;
+      cy += (ty - cy) * 0.1;
+      card.style.transform = `rotateX(${cx}deg) rotateY(${cy}deg) translateZ(0)`;
+      rafId = requestAnimationFrame(loop);
+    }
+    card.addEventListener('mouseenter', () => { if (!rafId) loop(); });
+    card.addEventListener('mouseleave', () => {
+      cancelAnimationFrame(rafId); rafId = null;
+      // Smoothly return to neutral
+      let steps = 0;
+      function reset() {
+        cx += (0 - cx) * 0.15;
+        cy += (0 - cy) * 0.15;
+        card.style.transform = `rotateX(${cx}deg) rotateY(${cy}deg) translateZ(0)`;
+        if (Math.abs(cx) > 0.05 || Math.abs(cy) > 0.05) requestAnimationFrame(reset);
+        else card.style.transform = '';
+      }
+      reset();
+    });
+  });
+})();
+
+/* ══════════════════════════════════════════════
+   CINEMATIC INTRO SEQUENCE CONTROLLER
+   Timeline:
+   0.0s  — overlay visible, floor fades in
+   0.5s  — name appears
+   0.8s  — character starts running from left
+   2.55s — character reaches center, stops
+   2.55s — impact burst + ring
+   2.8s  — progress bar complete
+   3.0s  — "Entering" blinks
+   3.6s  — overlay slides UP, main content reveals
+══════════════════════════════════════════════ */
+(function introSequence() {
+  const overlay  = document.getElementById('intro-overlay');
+  const mainWrap = document.getElementById('main-content');
+  const charWrap = document.getElementById('charWrap');
+
+  // After character arrives (2.55s) stop the running bob + leg anims
+  setTimeout(() => {
+    const char3d = charWrap.querySelector('.char-3d');
+    const legs   = charWrap.querySelectorAll('.c-leg');
+    const arms   = charWrap.querySelectorAll('.c-arm');
+    // Freeze running animations — character stands still
+    [char3d, ...legs, ...arms].forEach(el => {
+      el.style.animationPlayState = 'paused';
+    });
+    // Straighten legs to standing pose
+    charWrap.querySelector('.c-leg-l').style.transform = 'rotate(-8deg)';
+    charWrap.querySelector('.c-leg-r').style.transform = 'rotate(8deg)';
+    charWrap.querySelector('.c-arm-l').style.transform = 'rotate(20deg)';
+    charWrap.querySelector('.c-arm-r').style.transform = 'rotate(-20deg)';
+  }, 2550);
+
+  // At 3.6s — exit overlay, show main content
+  setTimeout(() => {
+    overlay.classList.add('exit');
+    mainWrap.classList.add('revealed');
+    // After exit animation finishes, remove overlay from DOM
+    setTimeout(() => {
+      overlay.remove();
+      // Kick off portfolio hero anims
+      triggerHeroAnims();
+    }, 950);
+  }, 3650);
+})();
+
+function triggerHeroAnims() {
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el, i) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) setTimeout(() => el.classList.add('visible'), i * 80);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   TYPING ANIMATION
+══════════════════════════════════════════════ */
+const phrases = ['Flutter Developer 📱', 'Web Developer 🌐', 'ECE Student ⚡', 'IoT Enthusiast 🔧', 'App Builder 🚀'];
+let phraseIdx = 0, charIdx = 0, deleting = false;
+const typingEl = document.getElementById('typing-text');
+
+function type() {
+  const current = phrases[phraseIdx];
+  if (!deleting) {
+    typingEl.textContent = current.slice(0, ++charIdx);
+    if (charIdx === current.length) { deleting = true; setTimeout(type, 1800); return; }
+  } else {
+    typingEl.textContent = current.slice(0, --charIdx);
+    if (charIdx === 0) { deleting = false; phraseIdx = (phraseIdx + 1) % phrases.length; }
+  }
+  setTimeout(type, deleting ? 55 : 85);
+}
+// Start typing after intro overlay exits (~4.6s total)
+setTimeout(type, 4800);
+
+/* ══════════════════════════════════════════════
+   NAVBAR + SCROLL EVENTS
+══════════════════════════════════════════════ */
+const navbar = document.getElementById('navbar');
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 40);
+  document.getElementById('scroll-top').classList.toggle('show', window.scrollY > 400);
+
+  // Active nav link
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 130) current = s.id; });
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+
+  // Scroll reveal
+  document.querySelectorAll('.reveal:not(.visible), .reveal-left:not(.visible), .reveal-right:not(.visible)').forEach(el => {
+    if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('visible');
+  });
+
+  // Skill bars
+  document.querySelectorAll('.skill-fill').forEach(bar => {
+    if (bar.getBoundingClientRect().top < window.innerHeight - 60 && !bar.style.width) {
+      bar.style.width = bar.dataset.width + '%';
+    }
+  });
+});
+
+/* ══════════════════════════════════════════════
+   SCROLL TOP
+══════════════════════════════════════════════ */
+document.getElementById('scroll-top').addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+
+/* ══════════════════════════════════════════════
+   THEME TOGGLE
+══════════════════════════════════════════════ */
+const toggle = document.getElementById('theme-toggle');
+let dark = true;
+toggle.addEventListener('click', () => {
+  dark = !dark;
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  toggle.textContent = dark ? '☀️' : '🌙';
+});
+
+/* ══════════════════════════════════════════════
+   HAMBURGER + MOBILE MENU
+══════════════════════════════════════════════ */
+const ham = document.getElementById('hamburger');
+const mob = document.getElementById('mobileMenu');
+ham.addEventListener('click', () => { ham.classList.toggle('open'); mob.classList.toggle('open'); });
+document.querySelectorAll('.mob-link').forEach(l => {
+  l.addEventListener('click', () => { ham.classList.remove('open'); mob.classList.remove('open'); });
+});
+
+/* ══════════════════════════════════════════════
+   SMOOTH SCROLL
+══════════════════════════════════════════════ */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior:'smooth' }); }
+  });
+});
+
+/* ══════════════════════════════════════════════
+   AVATAR / PHOTO LOADER
+   📸 Change MY_PHOTO to your filename (e.g. 'sakthi.jpg')
+══════════════════════════════════════════════ */
+const MY_PHOTO = 'sakthi.jpg';
+if (MY_PHOTO) {
+  const img = document.getElementById('avatar-img');
+  const fallback = document.getElementById('avatar-fallback');
+  img.src = MY_PHOTO;
+  img.onload = () => { img.style.display = 'block'; fallback.style.display = 'none'; };
+  img.onerror = () => { img.style.display = 'none'; fallback.style.display = 'flex'; };
+}
+
+/* ══════════════════════════════════════════════
+   SKILL TAG STAGGER ANIMATION on scroll
+   Tags appear with slight scale+opacity animation
+══════════════════════════════════════════════ */
+(function initSkillTagAnim() {
+  const tags = document.querySelectorAll('.skill-tag');
+  tags.forEach((tag, i) => {
+    tag.style.opacity = '0';
+    tag.style.transform = 'translateY(16px) scale(0.9)';
+    tag.style.transition = `opacity 0.4s ease ${i * 0.05}s, transform 0.4s cubic-bezier(0.34,1.56,0.64,1) ${i * 0.05}s`;
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.skill-tag').forEach(tag => {
+          tag.style.opacity = '1';
+          tag.style.transform = 'translateY(0) scale(1)';
+        });
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.2 });
+
+  const skillSection = document.getElementById('skills');
+  if (skillSection) observer.observe(skillSection);
+})();
+</script>
+</body>
+</html>
